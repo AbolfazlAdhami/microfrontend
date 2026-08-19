@@ -5,6 +5,9 @@ module.exports = {
   mode: "development",
   devServer: {
     port: 8080,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
   },
   plugins: [
     new ModuleFederationPlugin({
