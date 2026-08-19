@@ -1,7 +1,7 @@
-import faker from "faker";
+import { faker } from "@faker-js/faker";
 
 const mount = (el) => {
-  const cartText = `<div> You Have ${faker.random.number()} item in your cart</div>`;
+  let cartText = `<div> You Have ${faker.number.int({ min: 1, max: 10 })} item in your cart</div>`;
 
   el.innerHTML = cartText;
 };
