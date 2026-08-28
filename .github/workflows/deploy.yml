@@ -1,0 +1,76 @@
+name: Deploy Micro Frontends
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build auth
+        working-directory: auth
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build container
+        working-directory: container
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build dashboard
+        working-directory: dashboard
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build marketing
+        working-directory: marketing
+        run: |
+          npm ci
+          npm run build
+
+      - name: Prepare Pages
+        run: |
+          mkdir -p public
+
+          cp -r container/dist public/container
+          cp -r auth/dist public/auth
+          cp -r dashboard/dist public/dashboard
+          cp -r marketing/dist public/marketing
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
