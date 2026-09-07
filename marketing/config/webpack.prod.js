@@ -10,7 +10,7 @@ const prodConfig = {
   output: {
     filename: "[name].[contenthash].js",
   },
-  plugin: [
+  plugins: [
     new ModuleFederationPlugin({
       name: "marketing",
       filename: "remoteEntry.js",
@@ -22,4 +22,4 @@ const prodConfig = {
   ],
 };
 
-module.exports = merge(configCommon, prodConfig);
+module.exports = merge(commonConfig, prodConfig);
